@@ -21,7 +21,16 @@
 		"no-string-literal": false,
 		"ordered-imports": false,
 		"prefer-for-of": false,
-		"no-empty-interface": false
+		"no-empty-interface": false,
+		"indent": false,
+		"no-console": false,
+		"arrow-parens": false,
+		"no-var-requires": false,
+		"max-classes-per-file": false,
+		"forin": false,
+		"member-ordering": false,
+		"no-unused-expression": false,
+		"no-empty": false
 	},
 	"rulesDirectory": []
 }

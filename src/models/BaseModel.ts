@@ -1,6 +1,6 @@
 import { BaseEntity, BaseListener } from "../BaseEntity";
-import * as _ from "lodash";
 import { BaseEvent } from "../BaseEntity";
+import merge = require("lodash/merge");
 
 export interface BaseModelListener extends BaseListener {
 	selectionChanged?(event: BaseEvent<BaseModel> & { isSelected: boolean }): void;
@@ -34,7 +34,7 @@ export class BaseModel<T extends BaseModelListener = BaseModelListener> extends 
 	}
 
 	public serialize() {
-		return _.merge(super.serialize(), {
+		return merge(super.serialize(), {
 			_class: this.class,
 			selected: this.selected
 		});

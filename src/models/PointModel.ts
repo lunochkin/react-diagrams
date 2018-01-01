@@ -1,6 +1,6 @@
 import { BaseModel, BaseModelListener } from "./BaseModel";
 import { LinkModel } from "./LinkModel";
-import * as _ from "lodash";
+import merge = require("lodash/merge");
 
 export class PointModel extends BaseModel<BaseModelListener> {
 	x: number;
@@ -32,7 +32,7 @@ export class PointModel extends BaseModel<BaseModelListener> {
 	}
 
 	serialize() {
-		return _.merge(super.serialize(), {
+		return merge(super.serialize(), {
 			x: this.x,
 			y: this.y
 		});

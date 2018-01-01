@@ -1,7 +1,8 @@
 import { BaseModel, BaseModelListener } from "./BaseModel";
 import { NodeModel } from "./NodeModel";
 import { LinkModel } from "./LinkModel";
-import * as _ from "lodash";
+import merge = require("lodash/merge");
+import map = require("lodash/map");
 
 export class PortModel extends BaseModel<BaseModelListener> {
 	name: string;
@@ -14,10 +15,10 @@ export class PortModel extends BaseModel<BaseModelListener> {
 	}
 
 	serialize() {
-		return _.merge(super.serialize(), {
+		return merge(super.serialize(), {
 			name: this.name,
 			parentNode: this.parentNode.id,
-			links: _.map(this.links, link => {
+			links: map(this.links, link => {
 				return link.id;
 			})
 		});

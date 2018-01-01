@@ -1,8 +1,8 @@
 import * as React from "react";
-import * as _ from "lodash";
 import { DefaultNodeModel } from "./DefaultNodeModel";
 import { DefaultPortLabel } from "./DefaultPortLabelWidget";
 import { DiagramEngine } from "../DiagramEngine";
+import map = require("lodash/map");
 
 export interface DefaultNodeProps {
 	node: DefaultNodeModel;
@@ -31,8 +31,8 @@ export class DefaultNodeWidget extends React.Component<DefaultNodeProps, Default
 					<div className="name">{this.props.node.name}</div>
 				</div>
 				<div className="ports">
-					<div className="in">{_.map(this.props.node.getInPorts(), this.generatePort.bind(this))}</div>
-					<div className="out">{_.map(this.props.node.getOutPorts(), this.generatePort.bind(this))}</div>
+					<div className="in">{map(this.props.node.getInPorts(), this.generatePort.bind(this))}</div>
+					<div className="out">{map(this.props.node.getOutPorts(), this.generatePort.bind(this))}</div>
 				</div>
 			</div>
 		);

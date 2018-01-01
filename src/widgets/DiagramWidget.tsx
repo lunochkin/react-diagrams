@@ -1,6 +1,6 @@
 import * as React from "react";
 import { DiagramEngine } from "../DiagramEngine";
-import * as _ from "lodash";
+import forEach = require("lodash/forEach");
 import { LinkLayerWidget } from "./LinkLayerWidget";
 import { NodeLayerWidget } from "./NodeLayerWidget";
 import { Toolkit } from "../Toolkit";
@@ -209,15 +209,15 @@ export class DiagramWidget extends React.Component<DiagramProps, DiagramState> {
 		if (this.state.action instanceof SelectingAction) {
 			var relative = diagramEngine.getRelativePoint(event.clientX, event.clientY);
 
-			_.forEach(diagramModel.getNodes(), node => {
+			forEach(diagramModel.getNodes(), node => {
 				if ((this.state.action as SelectingAction).containsElement(node.x, node.y, diagramModel)) {
 					node.setSelected(true);
 				}
 			});
 
-			_.forEach(diagramModel.getLinks(), link => {
+			forEach(diagramModel.getLinks(), link => {
 				var allSelected = true;
-				_.forEach(link.points, point => {
+				forEach(link.points, point => {
 					if ((this.state.action as SelectingAction).containsElement(point.x, point.y, diagramModel)) {
 						point.setSelected(true);
 					} else {
@@ -241,7 +241,7 @@ export class DiagramWidget extends React.Component<DiagramProps, DiagramState> {
 			let amountY = event.clientY - this.state.action.mouseY;
 			let amountZoom = diagramModel.getZoomLevel() / 100;
 			
-			_.forEach(this.state.action.selectionModels, model => {
+			forEach(this.state.action.selectionModels, model => {
 				// in this case we need to also work out the relative grid position
 				if (
 					model.model instanceof NodeModel ||
@@ -278,7 +278,7 @@ export class DiagramWidget extends React.Component<DiagramProps, DiagramState> {
 	onKeyUp(event) {
 		//delete all selected
 		if (this.props.deleteKeys.indexOf(event.keyCode) !== -1) {
-			_.forEach(this.props.diagramEngine.getDiagramModel().getSelectedItems(), element => {
+			forEach(this.props.diagramEngine.getDiagramModel().getSelectedItems(), element => {
 				//only delete items which are not locked
 				if (!this.props.diagramEngine.isModelLocked(element)) {
 					element.remove();
@@ -294,7 +294,7 @@ export class DiagramWidget extends React.Component<DiagramProps, DiagramState> {
 		if (this.state.action instanceof MoveItemsAction) {
 			var element = this.getMouseElement(event);
 			var linkConnected = false;
-			_.forEach(this.state.action.selectionModels, model => {
+			forEach(this.state.action.selectionModels, model => {
 				//only care about points connecting to things
 				if (!(model.model instanceof PointModel)) {
 					return;
@@ -310,7 +310,7 @@ export class DiagramWidget extends React.Component<DiagramProps, DiagramState> {
 
 			//do we want to allow loose links on the diagram model or not
 			if (!linkConnected && !this.props.allowLooseLinks) {
-				_.forEach(this.state.action.selectionModels, model => {
+				forEach(this.state.action.selectionModels, model => {
 					//only care about points connecting to things
 					if (!(model.model instanceof PointModel)) {
 						return;

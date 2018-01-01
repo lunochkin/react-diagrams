@@ -1,8 +1,9 @@
 import { BaseModel, BaseModelListener } from "./BaseModel";
 import { PortModel } from "./PortModel";
 import { PointModel } from "./PointModel";
-import * as _ from "lodash";
 import { BaseEvent } from "../BaseEntity";
+import map = require("lodash/map");
+import merge = require("lodash/merge");
 
 export interface LinkModelListener extends BaseModelListener {
 	sourcePortChanged?(event: BaseEvent<LinkModel> & { port: null | PortModel }): void;
@@ -30,7 +31,7 @@ export class LinkModel extends BaseModel<LinkModelListener> {
 		super.deSerialize(ob);
 		this.linkType = ob.type;
 		this.extras = ob.extras;
-		this.points = _.map(ob.points, (point: { x; y }) => {
+		this.points = map(ob.points, (point: { x; y }) => {
 			var p = new PointModel(this, { x: point.x, y: point.y });
 			p.deSerialize(point);
 			return p;
@@ -38,13 +39,13 @@ export class LinkModel extends BaseModel<LinkModelListener> {
 	}
 
 	serialize() {
-		return _.merge(super.serialize(), {
+		return merge(super.serialize(), {
 			type: this.linkType,
 			source: this.sourcePort ? this.sourcePort.getParent().id : null,
 			sourcePort: this.sourcePort ? this.sourcePort.id : null,
 			target: this.targetPort ? this.targetPort.getParent().id : null,
 			targetPort: this.targetPort ? this.targetPort.id : null,
-			points: _.map(this.points, point => {
+			points: map(this.points, point => {
 				return point.serialize();
 			}),
 			extras: this.extras

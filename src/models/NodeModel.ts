@@ -1,6 +1,8 @@
 import { BaseModel, BaseModelListener } from "./BaseModel";
 import { PortModel } from "./PortModel";
-import * as _ from "lodash";
+import forEach = require("lodash/forEach");
+import map = require("lodash/map");
+import merge = require("lodash/merge");
 
 export class NodeModel extends BaseModel<BaseModelListener> {
 	nodeType: string;
@@ -24,7 +26,7 @@ export class NodeModel extends BaseModel<BaseModelListener> {
 		let oldY = this.y;
 
 		for (let port in this.ports) {
-			_.forEach(this.ports[port].getLinks(), link => {
+			forEach(this.ports[port].getLinks(), link => {
 				let point = link.getPointForPort(this.ports[port]);
 				point.x = point.x + x - oldX;
 				point.y = point.y + y - oldY;
@@ -42,7 +44,7 @@ export class NodeModel extends BaseModel<BaseModelListener> {
 		if (this.isSelected()) {
 			for (let portName in this.ports) {
 				entities = entities.concat(
-					_.map(this.ports[portName].getLinks(), link => {
+					map(this.ports[portName].getLinks(), link => {
 						return link.getPointForPort(this.ports[portName]);
 					})
 				);
@@ -60,12 +62,12 @@ export class NodeModel extends BaseModel<BaseModelListener> {
 	}
 
 	serialize() {
-		return _.merge(super.serialize(), {
+		return merge(super.serialize(), {
 			type: this.nodeType,
 			x: this.x,
 			y: this.y,
 			extras: this.extras,
-			ports: _.map(this.ports, port => {
+			ports: map(this.ports, port => {
 				return port.serialize();
 			})
 		});
@@ -74,7 +76,7 @@ export class NodeModel extends BaseModel<BaseModelListener> {
 	remove() {
 		super.remove();
 		for (var i in this.ports) {
-			_.forEach(this.ports[i].getLinks(), link => {
+			forEach(this.ports[i].getLinks(), link => {
 				link.remove();
 			});
 		}

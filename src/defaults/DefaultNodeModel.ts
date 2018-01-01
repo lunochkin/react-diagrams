@@ -1,5 +1,6 @@
 import { DefaultPortModel } from "./DefaultPortModel";
-import * as _ from "lodash";
+import merge = require("lodash/merge");
+import filter = require("lodash/filter");
 
 import { AbstractInstanceFactory } from "../AbstractInstanceFactory";
 import { NodeModel } from "../models/NodeModel";
@@ -35,20 +36,20 @@ export class DefaultNodeModel extends NodeModel {
 	}
 
 	serialize() {
-		return _.merge(super.serialize(), {
+		return merge(super.serialize(), {
 			name: this.name,
 			color: this.color
 		});
 	}
 
 	getInPorts(): DefaultPortModel[] {
-		return _.filter(this.ports, portModel => {
+		return filter(this.ports, portModel => {
 			return portModel.in;
 		});
 	}
 
 	getOutPorts(): DefaultPortModel[] {
-		return _.filter(this.ports, portModel => {
+		return filter(this.ports, portModel => {
 			return !portModel.in;
 		});
 	}

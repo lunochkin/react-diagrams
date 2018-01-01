@@ -1,6 +1,6 @@
-import * as _ from "lodash";
 import { AbstractInstanceFactory } from "../AbstractInstanceFactory";
 import { PortModel } from "../models/PortModel";
+import merge = require("lodash/merge");
 
 export class DefaultPortInstanceFactory extends AbstractInstanceFactory<DefaultPortModel> {
 	constructor() {
@@ -32,7 +32,7 @@ export class DefaultPortModel extends PortModel {
 	}
 
 	serialize() {
-		return _.merge(super.serialize(), {
+		return merge(super.serialize(), {
 			in: this.in,
 			label: this.label
 		});

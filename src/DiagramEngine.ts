@@ -2,7 +2,7 @@ import { NodeWidgetFactory, LinkWidgetFactory } from "./WidgetFactories";
 import { BaseEntity, BaseListener } from "./BaseEntity";
 import { DiagramModel } from "./models/DiagramModel";
 import { AbstractInstanceFactory } from "./AbstractInstanceFactory";
-import * as _ from "lodash";
+import forEach = require("lodash/forEach");
 import { BaseModel, BaseModelListener } from "./models/BaseModel";
 import { NodeModel } from "./models/NodeModel";
 import { PointModel } from "./models/PointModel";
@@ -62,8 +62,8 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 		entities.forEach(entity => {
 			//if a node is requested to repaint, add all of its links
 			if (entity instanceof NodeModel) {
-				_.forEach(entity.getPorts(), port => {
-					_.forEach(port.getLinks(), link => {
+				forEach(entity.getPorts(), port => {
+					forEach(port.getLinks(), link => {
 						this.paintableWidgets[link.getID()] = true;
 					});
 				});

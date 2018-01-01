@@ -1,10 +1,14 @@
 import { BaseListener, BaseEntity, BaseEvent } from "../BaseEntity";
-import * as _ from "lodash";
 import { DiagramEngine } from "../DiagramEngine";
 import { LinkModel } from "./LinkModel";
 import { NodeModel } from "./NodeModel";
 import { PortModel } from "./PortModel";
 import { BaseModel, BaseModelListener } from "./BaseModel";
+import merge = require("lodash/merge");
+import map = require("lodash/map");
+import flatMap = require("lodash/flatMap");
+import uniq = require("lodash/uniq");
+import forEach = require("lodash/forEach");
 /**
  * @author Dylan Vorster
  *
@@ -71,11 +75,11 @@ export class DiagramModel extends BaseEntity<DiagramListener> {
 		this.gridSize = object.gridSize;
 
 		//deserialize nodes
-		_.forEach(object.nodes, (node: any) => {
+		forEach(object.nodes, (node: any) => {
 			let nodeOb = diagramEngine.getInstanceFactory(node._class).getInstance(node) as NodeModel;
 			nodeOb.deSerialize(node);
 			//deserialize ports
-			_.forEach(node.ports, (port: any) => {
+			forEach(node.ports, (port: any) => {
 				let portOb = diagramEngine.getInstanceFactory(port._class).getInstance() as PortModel;
 				portOb.deSerialize(port);
 				nodeOb.addPort(portOb);
@@ -84,7 +88,7 @@ export class DiagramModel extends BaseEntity<DiagramListener> {
 			this.addNode(nodeOb);
 		});
 
-		_.forEach(object.links, (link: any) => {
+		forEach(object.links, (link: any) => {
 			let linkOb = diagramEngine.getInstanceFactory(link._class).getInstance() as LinkModel;
 			linkOb.deSerialize(link);
 
@@ -101,22 +105,22 @@ export class DiagramModel extends BaseEntity<DiagramListener> {
 	}
 
 	serializeDiagram() {
-		return _.merge(this.serialize(), {
+		return merge(this.serialize(), {
 			offsetX: this.offsetX,
 			offsetY: this.offsetY,
 			zoom: this.zoom,
 			gridSize: this.gridSize,
-			links: _.map(this.links, link => {
+			links: map(this.links, link => {
 				return link.serialize();
 			}),
-			nodes: _.map(this.nodes, link => {
+			nodes: map(this.nodes, link => {
 				return link.serialize();
 			})
 		});
 	}
 
 	clearSelection(ignore: BaseModel<BaseModelListener> | null = null) {
-		_.forEach(this.getSelectedItems(), element => {
+		forEach(this.getSelectedItems(), element => {
 			if (ignore && ignore.getID() === element.getID()) {
 				return;
 			}
@@ -129,28 +133,28 @@ export class DiagramModel extends BaseEntity<DiagramListener> {
 
 		// run through nodes
 		items = items.concat(
-			_.flatMap(this.nodes, node => {
+			flatMap(this.nodes, node => {
 				return node.getSelectedEntities();
 			})
 		);
 
 		// find all the links
 		items = items.concat(
-			_.flatMap(this.links, link => {
+			flatMap(this.links, link => {
 				return link.getSelectedEntities();
 			})
 		);
 
 		//find all points
 		items = items.concat(
-			_.flatMap(this.links, link => {
-				return _.flatMap(link.points, point => {
+			flatMap(this.links, link => {
+				return flatMap(link.points, point => {
 					return point.getSelectedEntities();
 				});
 			})
 		);
 
-		return _.uniq(items);
+		return uniq(items);
 	}
 
 	setZoomLevel(zoom: number) {

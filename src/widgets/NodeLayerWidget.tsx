@@ -1,7 +1,7 @@
 import * as React from "react";
 import { DiagramModel } from "../models/DiagramModel";
 import { DiagramEngine } from "../DiagramEngine";
-import * as _ from "lodash";
+import map = require("lodash/map");
 import { NodeWidget } from "./NodeWidget";
 
 export interface NodeLayerProps {
@@ -41,7 +41,7 @@ export class NodeLayerWidget extends React.Component<NodeLayerProps, NodeLayerSt
 					height: "100%"
 				}}
 			>
-				{_.map(diagramModel.getNodes(), node => {
+				{map(diagramModel.getNodes(), node => {
 					return React.createElement(
 						NodeWidget,
 						{
